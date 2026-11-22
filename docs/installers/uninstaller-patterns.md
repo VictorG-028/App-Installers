@@ -19,6 +19,11 @@ O `--delete-app-data` **nativo** do electron-builder só apaga o `%APPDATA%` (ro
 ## O que sai sempre numa desinstalação real
 Arquivos do app, entrada em "Aplicativos instalados", atalhos (Área de Trabalho, Menu Iniciar, "Atualizar …"), cache do atualizador. **Fica**: a pasta de dados (salvo a caixa/flag).
 
+## Apagar com segurança (o desinstalador é elevado)
+- **Nunca `RMDir /r` em pasta que o usuário comum possa escrever:** o NSIS 3.0.4 segue junctions e apagaria o alvo ([0011](../decisions/0011-desinstalador-nao-segue-links.md)). Use uma macro com `nsExec::Exec '"$SYSDIR\cmd.exe" /c rd /s /q "<pasta>"'`, que remove o link sem seguir (topo ou aninhado), e recuse agir se a variável de pasta vier vazia.
+- Em Program Files o `RMDir /r $INSTDIR` do template é aceitável: um usuário comum não consegue plantar links ali.
+- Teste isso no instalador real: o passo "junction" do ensaio planta uma junction no caminho do cache e outra dentro da pasta de dados, desinstala com `--delete-app-data` e confere que os alvos continuam lá.
+
 ## Detalhes
 - O desinstalador não "espera": o `Uninstall.exe` copia-se para `%TEMP%` e sai; testes precisam **esperar a pasta de instalação sumir**.
 - Antes de desinstalar, o processo do app (e o do motor) deve estar fechado; o instalador já pede.

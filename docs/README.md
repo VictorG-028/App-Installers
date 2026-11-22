@@ -23,6 +23,7 @@ Regras desta documentação:
 | [0008](decisions/0008-atualizacao-so-dentro-de-configuracoes.md) | Atualização só dentro de Configurações |
 | [0009](decisions/0009-processos-enxutos-gpu-e-rede.md) | Menos processos: renderização por software e rede no processo principal |
 | [0010](decisions/0010-sabor-e2e-para-ensaiar-instalador.md) | Sabor "e2e" para ensaiar instalar/atualizar/desinstalar sem risco |
+| [0011](decisions/0011-desinstalador-nao-segue-links.md) | Desinstalador elevado nunca apaga com `RMDir /r` pasta gravável pelo usuário (junctions) |
 
 ### Stacks
 [Interface](stacks/frontend.md) · [Motor](stacks/backend.md) · [Banco de dados](stacks/database.md)
