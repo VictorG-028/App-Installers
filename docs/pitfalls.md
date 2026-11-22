@@ -14,6 +14,15 @@ Cada item é algo que **custou tempo** e não é óbvio. Última revisão: 2026-
 - `Set-Content -Encoding UTF8` do **Windows PowerShell 5.1 grava BOM**: um `package.json` com BOM não é JSON válido para o builder. Use `[IO.File]::WriteAllText` com `UTF8Encoding($false)`.
 - Editar scripts com escapes (`\\`, `\x27`) por `node -e` no shell **corrompe barras invertidas** em silêncio — edite arquivos com a ferramenta de edição, não por substituição em linha de comando.
 
+## Scripts de release em Windows PowerShell 5.1
+Cada item abaixo derrubou uma tentativa de release (por sorte, sempre **antes** de publicar: ordene o script para que as verificações venham primeiro e a publicação por último).
+- **stderr de comando nativo lança exceção** com `$ErrorActionPreference = 'Stop'`, mesmo com `2>$null` ou `*> $null` (ex.: `gh release view` de uma tag que ainda não existe, "release not found"). Rode o comando com `Continue`, junte o stderr ao texto e confira o código de saída à mão.
+- **Nome de função não pode ser igual ao de um executável:** nomes de comando não diferenciam maiúsculas e a função vence o executável. Uma função `Gh` que chamava `& gh` chamava a si mesma (`CallDepthOverflow`); `GP` é alias de `Get-ItemProperty`. Chame o executável com a extensão (`gh.exe`) e dê nomes próprios às funções.
+- **`powershell -File` não recebe array:** `-Assets a, b` entrega `b` como argumento posicional solto e falha. Passe uma string única separada por vírgula e divida dentro do script.
+- **`Invoke-WebRequest().Content` é `byte[]`** quando o servidor responde `application/octet-stream`, que é o caso de qualquer asset de release do GitHub (inclusive `latest.yml`): decodifique antes de procurar texto.
+- **Arquivo `.ps1` com acento precisa de BOM UTF-8**, senão o 5.1 o lê como ANSI e o texto publicado sai com mojibake.
+- A verificação do feed deve fazer o que o cliente faz: ler o `latest.yml`, **baixar o instalador**, conferir o sha512 e a assinatura. Conferir só os cabeçalhos HTTP não pega um asset errado.
+
 ## Atualizador
 - **Sem `publisherName` no `app-update.yml` o electron-updater pula a verificação de assinatura.** Confira no build.
 - O provedor `github` pega "a última release do repositório": **quebra com mais de um produto** → `generic` + release-ponteiro.
