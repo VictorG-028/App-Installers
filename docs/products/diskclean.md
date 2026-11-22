@@ -20,6 +20,7 @@ Somente o atualizador, e somente quando você abre Configurações: baixa `lates
 | Versão | Resumo |
 |---|---|
 | 0.2.0 | Primeira versão com instalador, atualizador e desinstalador: interface em Electron + motor Python; visual novo, regras e textos do app anterior preservados; dados do app anterior reaproveitados (banco migrado com cópia de segurança). |
+| 0.2.1 | Barra lateral com nome e espaço do grupo num só componente; o scan passa a marcar como "não encontrado" o que foi removido por fora do app (antes ficava "apagável" para sempre); desinstalador que não segue junctions. |
 
 ## Suporte
 Uso pessoal, sem garantia. Veja o [aviso do README](../../README.md#aviso).

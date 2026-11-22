@@ -44,6 +44,12 @@ Cada item abaixo derrubou uma tentativa de release (por sorte, sempre **antes** 
 - Ao rodar testes e2e depois de um build `prod`, lembre que ele **recusa** a porta de depuração — reconstrua o sabor `e2e` antes.
 - Um shell parado dentro de `out\...` trava o `rmdir` da próxima compilação (EBUSY).
 
+## Dados locais do produto
+- Um **scan que só faz upsert** deixa "fantasmas": o que foi removido por fora do app (um programa desinstalado, uma pasta apagada à mão) continua com o tamanho antigo e a ação ativa
+  para sempre, porque nenhum gerador volta a emiti-lo. Ao fim do scan, marque como "não encontrado" o que **este scan não atualizou** e cujo caminho absoluto já não existe
+  (reversível: se o alvo volta, o próximo upsert o reativa; nunca mexa no que o usuário decidiu ignorar). Achado no diskclean com o `[base]` do conda (4,5 GB, "apagável", com a pasta já ausente).
+- Datas ISO sem fuso (UTC ingênuo) comparam bem como texto, mas só se **todas** vierem do mesmo relógio e formato: use a mesma função em quem grava e em quem filtra.
+
 ## Ferramentas
 - **TypeScript 7** removeu `baseUrl`; `paths` passa a ser relativo (`./`).
 - `npx <bin>` pode falhar ("could not determine executable") dentro de scripts PowerShell: chame o binário de `node_modules\.bin\*.cmd`.

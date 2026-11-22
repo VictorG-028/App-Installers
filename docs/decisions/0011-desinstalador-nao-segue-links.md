@@ -21,6 +21,10 @@ conteúdo do diretório escolhido pelo atacante é apagado com privilégio de ad
 No script do instalador, todo apagamento recursivo **fora de Program Files** usa uma macro que chama `cmd /c rd /s /q` (e nunca `RMDir /r`). A macro também não age se
 `$LOCALAPPDATA` vier vazio. O ensaio do instalador ganhou um passo que **planta** as duas formas de junction (no topo e aninhada), desinstala e confere que os alvos sobreviveram.
 
+## Verificação
+Em 2026-11-22, no instalador real (sabor de teste, com a macro já aplicada), o ensaio instalou, plantou uma junction em cada lugar (o caminho do cache do atualizador e uma aninhada na
+pasta de dados), desinstalou com `/S --delete-app-data` e passou nas cinco conferências: pasta de dados apagada, link do cache removido, **os dois alvos intactos**.
+
 ## Resíduo conhecido
 O template do próprio electron-builder faz `RMDir /r "$APPDATA\<nome>"` quando o desinstalador recebe `--delete-app-data` explícito. É opt-in e só importa se houver algo (e uma junction)
 em `%APPDATA%\<nome>`; o diskclean não usa essa pasta. Se um produto usar, apague-a antes pela macro segura.
