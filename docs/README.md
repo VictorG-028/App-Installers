@@ -24,6 +24,7 @@ Regras desta documentação:
 | [0009](decisions/0009-processos-enxutos-gpu-e-rede.md) | Menos processos: renderização por software e rede no processo principal |
 | [0010](decisions/0010-sabor-e2e-para-ensaiar-instalador.md) | Sabor "e2e" para ensaiar instalar/atualizar/desinstalar sem risco |
 | [0011](decisions/0011-desinstalador-nao-segue-links.md) | Desinstalador elevado nunca apaga com `RMDir /r` pasta gravável pelo usuário (junctions) |
+| [0012](decisions/0012-instalador-por-usuario-sem-uac.md) | App que não precisa de administrador: instalador por usuário, sem UAC, atualização só sob pedido |
 
 ### Stacks
 [Interface](stacks/frontend.md) · [Motor](stacks/backend.md) · [Banco de dados](stacks/database.md)
@@ -35,4 +36,4 @@ Regras desta documentação:
 [Interface e motor: medições](measurements/shells-and-engines.md) · [Armadilhas](pitfalls.md)
 
 ### Produtos
-[diskclean](products/diskclean.md)
+[diskclean](products/diskclean.md) · [project-archive-room](products/project-archive-room.md)

@@ -15,6 +15,16 @@ Cada item é algo que **custou tempo** e não é óbvio. Última revisão: 2026-
 - `Set-Content -Encoding UTF8` do **Windows PowerShell 5.1 grava BOM**: um `package.json` com BOM não é JSON válido para o builder. Use `[IO.File]::WriteAllText` com `UTF8Encoding($false)`.
 - Editar scripts com escapes (`\\`, `\x27`) por `node -e` no shell **corrompe barras invertidas** em silêncio — edite arquivos com a ferramenta de edição, não por substituição em linha de comando.
 
+### Achados na construção do segundo instalador (por usuário, 2026-11-22)
+- **Cache de executável do electron-builder 26.18 + fuse de integridade do asar = app que não abre.** O builder reaproveita o exe já editado e assinado quando a chave bate, mas a chave inclui o cabeçalho de um `app.asar` que está num caminho que não existe; um rebuild em que só o código mudou recoloca o exe antigo (hash do asar anterior) e o app morre ao abrir: `FATAL: Integrity check failed for asar archive`. Defesa: `ELECTRON_BUILDER_DISABLE_BUILD_CACHE=true`, pasta de saída vazia a cada build e uma verificação pós-build que compara o hash embutido no exe com o cabeçalho do asar.
+- **`taskkill /T` sem `/F` não fecha um app Electron** (recusa sinalizar o processo principal enquanto há filhos sem janela; levou 12,7 s): sem `/T`, `taskkill /IM <exe>` manda WM_CLOSE a todos e fecha em 0,2 s. **E `taskkill /T` numa atualização mata o próprio instalador**, que é filho `detached` do app.
+- O `--delete-app-data` do template do electron-builder faz `RMDir /r` em `%APPDATA%\<name>`, que num app Electron costuma ser a pasta de dados: esvazie-a antes pela macro segura no `customUnInstall`.
+- Instalador por usuário sem `customInstallMode` mostra a página "para quem instalar" com "(must run as admin)" em inglês: force `StrCpy $isForceCurrentInstall "1"`.
+- `productName` no `package.json` muda a pasta de dados (o Electron o prefere ao `name`): use `extraMetadata` para gravar `name` e `productName` iguais ao nome de execução.
+- Caixas do Electron (`dialog.showMessageBox`) são TaskDialogs: o UI Automation lê os textos, mas os botões não têm `InvokePattern`; `EnumChildWindows` + `BM_CLICK` clica. No NSIS pt-BR o botão é "Avançar" no instalador e "Próximo" no desinstalador.
+- A cópia do instalador que o modelo NSIS deixa no cache do atualizador (~77 MB) só serve à atualização diferencial; com ela desligada, apague-a no `customInstall` (e repita o `rd` por alguns segundos): a desinstalação deixava a pasta para trás logo depois de builds novos (provável varredura do antivírus).
+- `latest.yml` sem `size` quando não há blockmap: não exija o campo na verificação.
+
 ## Scripts de release em Windows PowerShell 5.1
 Cada item abaixo derrubou uma tentativa de release (por sorte, sempre **antes** de publicar: ordene o script para que as verificações venham primeiro e a publicação por último).
 - **stderr de comando nativo lança exceção** com `$ErrorActionPreference = 'Stop'`, mesmo com `2>$null` ou `*> $null` (ex.: `gh release view` de uma tag que ainda não existe, "release not found"). Rode o comando com `Continue`, junte o stderr ao texto e confira o código de saída à mão.
