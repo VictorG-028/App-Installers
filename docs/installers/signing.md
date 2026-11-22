@@ -15,6 +15,7 @@ Importa o `.cer` em `LocalMachine\Root` **e** `LocalMachine\TrustedPublisher`. E
 - O electron-builder assina o exe do app, o instalador e o desinstalador (`signtoolOptions.certificateFile/Password`).
 - O exe do **motor** (extra resource) é assinado **antes** do empacotamento com `Set-AuthenticodeSignature -HashAlgorithm SHA256` (não depende de `signtool` instalado).
 - A senha do PFX é lida do arquivo DPAPI **só durante o build** e removida do ambiente em seguida.
+- **Sem carimbo de tempo, de propósito:** o build define `ELECTRON_BUILDER_OFFLINE=true`; sem isso o electron-builder pede o carimbo a `timestamp.digicert.com` e o build cai quando esse servidor está fora do ar ([armadilhas](../pitfalls.md)).
 
 ## Conferir
 `Get-AuthenticodeSignature <arquivo>`: antes de confiar → `UnknownError` (assinado, raiz não confiável); depois → `Valid`. A verificação do build exige o CN `VictorG-028 App Installers` em instalador, app e motor.

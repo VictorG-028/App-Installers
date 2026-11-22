@@ -8,6 +8,7 @@ Cada item é algo que **custou tempo** e não é óbvio. Última revisão: 2026-
 - **`$LOCALAPPDATA` no contexto "todos os usuários" é `C:\ProgramData`.** O desinstalador mostrava (e poderia apagar) a pasta errada; use `SetShellVarContext current` para a pasta do usuário.
 - **`multiLanguageInstaller: false` ignora `language`** e o assistente sai em inglês; para português use `multiLanguageInstaller: true` + `installerLanguages: ['pt_BR']`.
 - O **instalador "um clique"** não tem página final: para "abrir ao terminar" com escolha, use o assistido.
+- **O build assinado depende de um servidor de terceiros por padrão:** o electron-builder pede carimbo de tempo (RFC 3161) a `timestamp.digicert.com` para cada arquivo assinado. Quando esse servidor não responde, o `signtool` falha ("timestamp server could not be reached") e o build inteiro cai, mesmo com o GitHub no ar. Com certificado autoassinado confiado só na própria máquina o carimbo não traz nada; defina `ELECTRON_BUILDER_OFFLINE=true` no build (a variável só desliga o carimbo no código de assinatura, não os downloads).
 - Nome de asset com **espaço** vira ponto no GitHub e o `latest.yml` deixa de casar.
 - O `Uninstall.exe` se copia para `%TEMP%` e retorna: automação deve esperar a pasta sumir.
 - `Set-Content -Encoding UTF8` do **Windows PowerShell 5.1 grava BOM**: um `package.json` com BOM não é JSON válido para o builder. Use `[IO.File]::WriteAllText` com `UTF8Encoding($false)`.
