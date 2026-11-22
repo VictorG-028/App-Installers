@@ -1,0 +1,18 @@
+# Este repositório guarda só documentação. Binários vão em Releases; segredos nunca.
+*.exe
+*.dll
+*.msi
+*.zip
+*.7z
+*.asar
+*.pfx
+*.p12
+*.cer
+*.pem
+*.key
+*.pwd
+.env
+.env.*
+!.env.example
+Thumbs.db
+.DS_Store
