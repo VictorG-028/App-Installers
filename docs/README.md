@@ -29,7 +29,7 @@ Regras desta documentação:
 [Interface](stacks/frontend.md) · [Motor](stacks/backend.md) · [Banco de dados](stacks/database.md)
 
 ### Instalador, atualizador, desinstalador
-[Padrões do instalador](installers/installer-patterns.md) · [Atualizador](installers/updater-patterns.md) · [Desinstalador](installers/uninstaller-patterns.md) · [Assinatura](installers/signing.md) · [Layout do feed](installers/feed-layout.md) · [Processo de release](installers/release-process.md)
+[Padrões do instalador](installers/installer-patterns.md) · [Atualizador](installers/updater-patterns.md) · [Desinstalador](installers/uninstaller-patterns.md) · [Assinatura](installers/signing.md) · [Layout do feed](installers/feed-layout.md) · [Processo de release](installers/release-process.md) · [Apps Flutter (Android e Windows)](installers/flutter-installers.md)
 
 ### Medições e armadilhas
 [Interface e motor: medições](measurements/shells-and-engines.md) · [Armadilhas](pitfalls.md)
